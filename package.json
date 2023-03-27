@@ -1,7 +1,7 @@
 {
-  "name": "gatsby-starter-apple",
-  "version": "3.0.0",
-  "description": "Gatsby blog starter kit with beautiful and responsive design",
+  "name": "vron-gatsby",
+  "version": "1.0.0",
+  "description": "vron",
   "main": "index.js",
   "private": true,
   "scripts": {
