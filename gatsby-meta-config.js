@@ -24,7 +24,7 @@ const metaConfig = {
   lang: "en",
   utterances: "sungik-choi/gatsby-starter-apple-comment",
   links: {
-    // github: "/#",
+    github: "/#",
   },
   favicon: "src/images/icon.png",
 }
