@@ -21,7 +21,10 @@ const Home = ({
   const [products, setProducts] = useState<any[]>([])
   const currentCategory = pageContext.category
   const postData = data.allMarkdownRemark.edges
-  const [categories, setCategories] = useState([])
+  const [categories, setCategories] = useState<any[]>([
+    { fieldValue: "Product Category 1", totalCount: 1 },
+    { fieldValue: "Product Category 2", totalCount: 1 }
+  ])
 
   const q = useQuery(queryx, {
     variables: {
@@ -67,8 +70,6 @@ const Home = ({
 
   //   return slug
   // }
-
-  console.log(q);
   
 
   useLayoutEffect(() => {
@@ -154,6 +155,7 @@ const Home = ({
           <PostTitle>{postTitle}</PostTitle>
           <ProductGrid products={products} />
           {/* <PostGrid posts={posts} /> */}
+          {q.loading && <Content>Loading...</Content>}
         </Content>
       </Main>
     </Layout>

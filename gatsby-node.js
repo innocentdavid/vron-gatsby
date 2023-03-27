@@ -56,7 +56,11 @@ exports.createPages = async ({ graphql, actions }) => {
     })
   })
 
-  const categories = result.data.categoriesGroup.group
+  // const categories = result.data.categoriesGroup.group
+  const categories = [
+    { fieldValue: "Product Category 1", totalCount: 1 },
+    { fieldValue: "Product Category 2", totalCount: 1 }
+  ]
 
   categories.forEach(category => {
     createPage({
