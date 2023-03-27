@@ -21,6 +21,7 @@ const Home = ({
   const [products, setProducts] = useState<any[]>([])
   const currentCategory = pageContext.category
   const postData = data.allMarkdownRemark.edges
+  const [categories, setCategories] = useState([])
 
   const q = useQuery(queryx, {
     variables: {
@@ -67,19 +68,25 @@ const Home = ({
   //   return slug
   // }
 
+  console.log(q);
+  
+
   useLayoutEffect(() => {
     if (q.loading) return
     const filteredProductData = currentCategory
-      ? q?.data.ExternalUserProductGetAll.filter(
+      ? q?.data?.ExternalUserProductGetAll?.filter(
           (data: typeof q.data.ExternalUserProductGetAll) =>
-            data?.category === currentCategory
+            data?.category?.name === currentCategory
         )
-      : q?.data.ExternalUserProductGetAll
+      : q?.data?.ExternalUserProductGetAll
 
-    filteredProductData.forEach(
+    // const catgs = new Set()
+
+    filteredProductData?.forEach(
       (data: typeof q.data.ExternalUserProductGetAll, index: number) => {
         const { price } = data!
-        const category = data?.category?.name        
+        const category = data?.category?.name
+        // catgs.add({ fieldValue: category, totalCount: 1 })
         const description = data?.description?.values?.[lang.k]?.text
         const name = data?.name?.values?.[lang.k]?.text
         const downloadUrl = data?.media?.image2dFiles?.[0]?.downloadUrl
@@ -99,6 +106,8 @@ const Home = ({
         ])
       }
     )
+    // console.log(catgs)
+    // setCategories(catgs)
   }, [currentCategory, lang, q])
 
   useLayoutEffect(() => {
@@ -133,13 +142,15 @@ const Home = ({
   const site = useSiteMetadata()
   const postTitle = currentCategory || site.postTitle
 
+  // console.log(data.allMarkdownRemark.group)
+
   return (
     <Layout>
       <SEO title="Home" />
       <Main>
         <Content>
           {/* <CategoryFilter categoryList={data.allMarkdownRemark.group} /> */}
-          <CategoryFilter categoryList={[]} />
+          <CategoryFilter categoryList={categories} />
           <PostTitle>{postTitle}</PostTitle>
           <ProductGrid products={products} />
           {/* <PostGrid posts={posts} /> */}
