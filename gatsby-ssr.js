@@ -1,4 +1,26 @@
 const React = require("react")
+const { ApolloClient, InMemoryCache } = require("@apollo/client");
+const { ApolloProvider } = require("@apollo/client/react");
+const fetch = require("cross-fetch");
+// import { ApolloClient, InMemoryCache } from "@apollo/client"
+// import { ApolloProvider } from "@apollo/client/react"
+// import fetch from "cross-fetch"
+
+
+exports.wrapRootElement = ({ element }) => {
+  const client = new ApolloClient({
+    uri: 'https://vrex-dev-api.dev.motorenflug.at/graphql/',
+    cache: new InMemoryCache(),
+    fetch,
+  })
+
+  return (
+    <ApolloProvider client={client}>
+      {element}
+    </ApolloProvider>
+  )
+}
+// export { wrapRootElement } from './src/apollo/provider';
 
 exports.onRenderBody = ({ setPreBodyComponents }) => {
   setPreBodyComponents([

@@ -201,5 +201,29 @@ module.exports = {
     ...markdownPlugins,
     ...searchPlugins,
     ...pwaPlugins,
+    // {
+    //   resolve: "gatsby-source-graphql",
+    //   options: {
+    //     typeName: "ExternalUserProductGetAll",
+    //     fieldName: "ExternalUserProductGetAll",
+    //     url: "https://vrex-dev-api.dev.motorenflug.at/graphql",
+    //     refetchInterval: 60,
+    //     variables: {
+    //       "input": {
+    //         "auth": {
+    //           "apiKey": "API_63e668ea22e411bc88d1d93c",
+    //           "secretKey": "rKZPeKWw3IKI3P26T1f1Refz"
+    //         },
+    //         "categoryName": null
+    //       }
+    //     }
+    //   },
+    // },
+    // {
+    //   resolve: 'gatsby-plugin-apollo',
+    //   options: {
+    //     uri: 'https://vrex-dev-api.dev.motorenflug.at/graphql'
+    //   }
+    // },
   ],
 }

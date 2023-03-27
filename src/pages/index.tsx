@@ -9,14 +9,98 @@ import Layout from "Layouts/layout"
 import SEO from "Components/seo"
 import PostGrid from "Components/postGrid"
 import CategoryFilter from "Components/catetgoryFilter"
+import { useQuery, gql } from "@apollo/client"
+import ProductGrid from "../components/productGrid/productGrid"
 
 const Home = ({
   pageContext,
   data,
 }: PageProps<Queries.Query, Queries.MarkdownRemarkFrontmatter>) => {
+  const [lang, setLang] = useState({ k: 0, v: "en" })
   const [posts, setPosts] = useState<Post[]>([])
+  const [products, setProducts] = useState<any[]>([])
   const currentCategory = pageContext.category
   const postData = data.allMarkdownRemark.edges
+
+  const q = useQuery(queryx, {
+    variables: {
+      input: {
+        auth: {
+          apiKey: "API_63e668ea22e411bc88d1d93c",
+          secretKey: "rKZPeKWw3IKI3P26T1f1Refz",
+        },
+        categoryName: null,
+      },
+    },
+    notifyOnNetworkStatusChange: true,
+    onCompleted: () => {
+      // console.log(data)
+      // setWeather(data)
+      // var s = new Date(
+      //   data.getCityByName.weather.timestamp * 1000
+      // ).toLocaleString("en-US")
+      // setDate(s)
+    },
+  })
+  // !q.loading && console.log("q: ", q.data)
+
+  function truncateString(str, num) {
+    if (str.length <= num) {
+      return str
+    }
+    return str.slice(0, num) + "..."
+  }
+
+  function createSlug(name: string) {
+    // Convert the name to lowercase and remove leading/trailing whitespace
+    let slug = name.trim().toLowerCase()
+
+    // Replace all non-alphanumeric characters with a hyphen
+    slug = slug.replace(/[^a-z0-9]+/g, "-")
+
+    // Remove any consecutive hyphens
+    slug = slug.replace(/--+/g, "-")
+
+    // Remove any leading or trailing hyphens
+    slug = slug.replace(/^-+|-+$/g, "")
+
+    return slug
+  }
+
+  useLayoutEffect(() => {
+    if (q.loading) return
+    const filteredProductData = currentCategory
+      ? q?.data.ExternalUserProductGetAll.filter(
+          (data: typeof q.data.ExternalUserProductGetAll) =>
+            data?.category === currentCategory
+        )
+      : q?.data.ExternalUserProductGetAll
+
+    let count = 0
+
+    filteredProductData.forEach(
+      (data: typeof q.data.ExternalUserProductGetAll) => {
+        const { price, category } = data!
+        const description = data?.description.values[lang.k].text
+        const name = data?.name.values[lang.k].text
+        const downloadUrl = data?.media.image2dFiles[0].downloadUrl
+
+        setProducts(prevPost => [
+          ...prevPost,
+          {
+            id: count,
+            name,
+            slug: createSlug(name),
+            category,
+            price,
+            description: truncateString(description, 50),
+            downloadUrl,
+          },
+        ])
+        count += 1
+      }
+    )
+  }, [currentCategory, lang, q])
 
   useLayoutEffect(() => {
     const filteredPostData = currentCategory
@@ -55,9 +139,11 @@ const Home = ({
       <SEO title="Home" />
       <Main>
         <Content>
-          <CategoryFilter categoryList={data.allMarkdownRemark.group} />
+          {/* <CategoryFilter categoryList={data.allMarkdownRemark.group} /> */}
+          <CategoryFilter categoryList={[]} />
           <PostTitle>{postTitle}</PostTitle>
-          <PostGrid posts={posts} />
+          <ProductGrid products={products} />
+          {/* <PostGrid posts={posts} /> */}
         </Content>
       </Main>
     </Layout>
@@ -127,6 +213,54 @@ export const query = graphql`
             slug
           }
         }
+      }
+    }
+  }
+`
+
+export const queryx = gql`
+  query ExternalUserProductGetAll($input: ExternalUserProductGetAllInput!) {
+    ExternalUserProductGetAll(input: $input) {
+      name {
+        text
+        values {
+          lang
+          text
+        }
+      }
+      description {
+        text
+        values {
+          lang
+          text
+        }
+      }
+      price
+      seo {
+        title
+        description
+      }
+      manufacturer
+      options {
+        colours
+        materials
+        sizes
+      }
+      tag
+      media {
+        image2dFiles {
+          downloadUrl
+        }
+
+        name
+      }
+      shipping {
+        weight
+        originCountryOrRegion
+        harmonisedSystemCode
+      }
+      category {
+        name
       }
     }
   }

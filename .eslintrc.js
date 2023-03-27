@@ -22,6 +22,7 @@ module.exports = {
         "@typescript-eslint/explicit-module-boundary-types": 0,
         "@typescript-eslint/no-non-null-asserted-optional-chain": 0,
         "react/prop-types": 0,
+        "@typescript-eslint/no-explicit-any": ["off"],
       },
     },
     {
