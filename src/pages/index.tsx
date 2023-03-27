@@ -7,7 +7,7 @@ import type Post from "Types/Post"
 import useSiteMetadata from "Hooks/useSiteMetadata"
 import Layout from "Layouts/layout"
 import SEO from "Components/seo"
-import PostGrid from "Components/postGrid"
+// import PostGrid from "Components/postGrid"
 import CategoryFilter from "Components/catetgoryFilter"
 import { useQuery, gql } from "@apollo/client"
 import ProductGrid from "../components/productGrid/productGrid"
@@ -16,8 +16,8 @@ const Home = ({
   pageContext,
   data,
 }: PageProps<Queries.Query, Queries.MarkdownRemarkFrontmatter>) => {
-  const [lang, setLang] = useState({ k: 0, v: "en" })
-  const [posts, setPosts] = useState<Post[]>([])
+  const [lang] = useState({ k: 0, v: "en" })
+  const [, setPosts] = useState<Post[]>([])
   const [products, setProducts] = useState<any[]>([])
   const currentCategory = pageContext.category
   const postData = data.allMarkdownRemark.edges
@@ -44,28 +44,28 @@ const Home = ({
   })
   // !q.loading && console.log("q: ", q.data)
 
-  function truncateString(str, num) {
+  function truncateString(str: string, num: number) {
     if (str.length <= num) {
       return str
     }
     return str.slice(0, num) + "..."
   }
 
-  function createSlug(name: string) {
-    // Convert the name to lowercase and remove leading/trailing whitespace
-    let slug = name.trim().toLowerCase()
+  // function createSlug(name: string) {
+  //   // Convert the name to lowercase and remove leading/trailing whitespace
+  //   let slug = name.trim().toLowerCase()
 
-    // Replace all non-alphanumeric characters with a hyphen
-    slug = slug.replace(/[^a-z0-9]+/g, "-")
+  //   // Replace all non-alphanumeric characters with a hyphen
+  //   slug = slug.replace(/[^a-z0-9]+/g, "-")
 
-    // Remove any consecutive hyphens
-    slug = slug.replace(/--+/g, "-")
+  //   // Remove any consecutive hyphens
+  //   slug = slug.replace(/--+/g, "-")
 
-    // Remove any leading or trailing hyphens
-    slug = slug.replace(/^-+|-+$/g, "")
+  //   // Remove any leading or trailing hyphens
+  //   slug = slug.replace(/^-+|-+$/g, "")
 
-    return slug
-  }
+  //   return slug
+  // }
 
   useLayoutEffect(() => {
     if (q.loading) return
@@ -76,28 +76,27 @@ const Home = ({
         )
       : q?.data.ExternalUserProductGetAll
 
-    let count = 0
-
     filteredProductData.forEach(
-      (data: typeof q.data.ExternalUserProductGetAll) => {
-        const { price, category } = data!
-        const description = data?.description.values[lang.k].text
-        const name = data?.name.values[lang.k].text
-        const downloadUrl = data?.media.image2dFiles[0].downloadUrl
+      (data: typeof q.data.ExternalUserProductGetAll, index: number) => {
+        const { price } = data!
+        const category = data?.category?.name        
+        const description = data?.description?.values?.[lang.k]?.text
+        const name = data?.name?.values?.[lang.k]?.text
+        const downloadUrl = data?.media?.image2dFiles?.[0]?.downloadUrl
 
         setProducts(prevPost => [
           ...prevPost,
           {
-            id: count,
+            id: index,
             name,
-            slug: createSlug(name),
+            // slug: createSlug(name),
+            slug: "https://vrex-dev-vr.dev.motorenflug.at/project/f34d4b4419cac253b12f351ada1abd98",
             category,
             price,
             description: truncateString(description, 50),
             downloadUrl,
           },
         ])
-        count += 1
       }
     )
   }, [currentCategory, lang, q])

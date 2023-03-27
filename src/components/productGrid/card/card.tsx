@@ -1,8 +1,8 @@
 import React from "react"
 import styled from "styled-components"
+import Category from "Styles/category"
 
 // import type Post from "Types/Post"
-// import Category from "Styles/category"
 // import DateTime from "Styles/dateTime"
 import CenteredImg from "./centeredImg"
 
@@ -11,13 +11,7 @@ import CenteredImg from "./centeredImg"
 //   "thumbnail" | "alt" | "category" | "title" | "desc" | "date"
 // >
 
-const Card = ({
-  thumbnail,
-  alt,
-  category,
-  title,
-  desc,
-}) => {
+const Card = ({ thumbnail, alt, category, title, desc }: any) => {  
   return (
     <Wrapper>
       <CenteredImg src={thumbnail} alt={alt} />
@@ -83,12 +77,6 @@ const Desc = styled.p`
   word-break: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
-`
-const Category = styled.span`
-  display: block;
-  font-size: 0.875rem;
-  font-weight: var(--font-weight-semi-bold);
-  color: var(--color-text-3);
 `
 
 export default React.memo(Card)

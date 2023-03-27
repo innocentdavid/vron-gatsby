@@ -31,7 +31,7 @@ const ProductGrid: React.FC<PostGridProps> = ({ products }) => {
           category,
           downloadUrl,
         } = data
-        console.log(data);
+        // console.log(data);
         
         const ariaLabel = `${name} - ${category}`
         return (
